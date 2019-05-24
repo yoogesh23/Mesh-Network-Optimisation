@@ -70,6 +70,7 @@ cal_key () {
 	else
    		key[$n,0] = ${g[n]}+${h[n]}
 		key[$n,1] = ${g[n]}
+	fi
 	
 }
 
@@ -119,6 +120,7 @@ rem_open(){
 			add_visited()
 		else
 			i = $i + 1
+		fi
 	done
 	
 }
@@ -133,8 +135,7 @@ add_open(){
 	done	
 	
 	
-	if [ $n -lt 3 ]
-	then
+	if [ $n -lt 3 ]; then
 		open[i] = $n
 	
 }
@@ -155,8 +156,7 @@ min_rhs()
 		k = $sucs[$n,$i]
 		c = $adj[$n,$k]
 		c = $c+$g[$k]
-		if [ $min -gt $c ]
-		then
+		if [ $min -gt $c ]; then
 			min = $c
 		
 	done
@@ -166,35 +166,35 @@ min_rhs()
 }
 
 
-void update_state(int n)
-{	
-	printf("\n updating %d ",n);
-	int i = 0, flag = 0, flag2 = 0;
-	for(int j=0;j<3;j++)
-		cal_key(j);
-	printf(" hello");
-	for(int j=0;j<3;j++)
-		printf("\n visited %d",visited[j]);
-	while(i<3)                           //  s not visited
-	{
-		if(n==visited[i])
-		{
-			flag = 1;
-			printf(" hello %d",i);
-			break;
-		}
-		
+update_state(){	
+	
+	declare -i i
+	i = 0
+	declare -i flag
+	flag = 0
+	declare -i flag2
+	flag2 = 0
+	declare -i j
+	j = 0
+	for j in 0 1 2
+	do
+		cal_key $j
+	done
+	j = 0
+
+	while [ $i  -lt 3 ]
+	do
+		if [ $n -eq ${visited[$i]} ]
+		then
+			flag = 1
+			break
 		else
-		{
-		  i++;
-		}
-	}
-	printf(" hello dude");
-	if(flag==0)
-		{
-			g[n] = 1000;  
-			printf("\n In update and N is in visited :");                         //  g(s) = infinite
-		}
+			i = $i + 1
+		fi
+	done
+	if [ $flag -eq 0 ]; then
+		g[$n] = 1000
+	
 	if(n!=goal)
 	{	
 		printf(" hello bro");
