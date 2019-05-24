@@ -194,53 +194,54 @@ update_state(){
 	done
 	if [ $flag -eq 0 ]; then
 		g[$n] = 1000
+	if [ $n -ne $goal ]; then
+		min_rhs $n			   //  min sE succ
+	i = 0
 	
-	if(n!=goal)
-	{	
-		printf(" hello bro");
-		min_rhs(n);                               //  min sE succ 
-	}
-	i=0;
-	while(i<3)
-	{
-		if((open[i]!=-1)&&(open[i]==n))
-		{
-			flag2 =1;
-		}
-		i++;
-	}
-	if(flag2==1)
-	{
-		rem_open(n);
-	}
+	
+	while [ $i -lt 3 ]
+	do
+		if [ ${open[i]} -ne -1 -a  ${open[i]} -eq $n ]; then
+		flag2 = 1
 		
-	if(g[n]!=rhs[n])
-	{
-		add_open(n);                           // if g(s)!=rhs(s) then add to open list
-	}
+		i = $i + 1
+	done
+	if [ $flag2 -eq 1 ]; then
+		rem_open $n
+	
+		
+	if [ ${g[n]} -ne ${trhs[n]} ]; then
+		add_open $n                           // if g(s)!=rhs(s) then add to open list
+	
 	
 }
 
-int min_key()
-{	
+min_key(){
+	declare -i i
+	i = 0
+	declare -i flag
+	flag = 0
+	declare -i min
+	min = 2
+	declare -i j
+	j = 0
 	int min=2,i=0,j, flag =0;
-	for(j=0;j<3;j++)
-		cal_key(j);
-	j =-1;
-	for(int p=0;p<3;p++)
-	{
-		printf("\n the open lis %d",open[p]);
-	}	
-	i=0;
-min = -1;
-if(open[0]!=-1)
-{
-min =0;	
-i=1;
+	for((j=0;j<3;j++))
+	do
+		cal_key $j
+	done
+	j = -1
+		
+	i = 0
+min = -1
+if [ ${open[0]} -ne -1 ]; 
+then
+min =0	
+i=1
 
-while((open[i]!=-1)&&i<3)
-{	printf(" \nvalue of i %d\n",i);
-	if(key[open[i]][0]<key[open[min]][0])
+while [ ${open[i]} -ne -1 -a $i -lt 3 ]
+do
+	if [ ${key[${open[i]}][0]} -lt ${key[${open[min]}][0]} ]; then
 		{
 			min = i;
 			printf("In one \n");
