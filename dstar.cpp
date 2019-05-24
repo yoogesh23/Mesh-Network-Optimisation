@@ -1,36 +1,83 @@
-#include <stdio.h>
+#!/bin/bash
 
-int g[3]={1000,1000,1000};
-int rhs[3]={1000,1000,0};
-int open[3]= {-1,-1,-1};
-int key[3][2]; 
-int h[3]={0,10,25};
-//int adj[3][3] = {0,10,25, 10,0,20, 25,20,0};
-int adj[3][3] = {0,10,25, 1000,0,20, 1000,1000,0};
-int visited[3]= {-1,-1,-1};
-int start = 0,goal = 2;
-int sucs[3][2] = {1,2, 2,-1, -1,-1};
-int pred[3][2] = {-1,-1, 0,-1, 0,1};
-int n = 0;
+declare -A g
+g=("1000" "1000" "1000")
 
-void cal_key(int n)
-{
-	if(g[n]>=rhs[n])
-	{
-		key[n][0]= rhs[n]+h[n];
-		key[n][1]=rhs[n];
-	}
+declare -A rhs
+rhs=("1000" "1000" "0")
+
+declare -A open
+open=("-1" "-1" "-1")
+
+declare -A key
+num_rows=3
+num_columns=2
+
+declare -A h 
+h=("0" "10" "25")
+
+declare -A adj
+num_rows=3
+num_columns=3
+adj[0,0]=0
+adj[0,1]=10
+adj[0,2]=25
+adj[1,0]=10
+adj[1,1]=0
+adj[1,2]=20
+adj[2,0]=25
+adj[2,1]=20
+adj[2,2]=0
+
+declare -A visited
+visited=("-1" "-1" "-1")
+
+declare -i start 
+start= 0
+
+declare -i goal 
+goal= 2
+
+declare -A sucs
+num_rows=3
+num_columns=2
+sucs[0,0]=1
+sucs[0,1]=2
+sucs[1,0]=2
+sucs[1,1]=-1
+sucs[2,0]=-1
+sucs[2,1]=-1
+
+declare -A pred
+num_rows=3
+num_columns=2
+pred[0,0]=-1
+pred[0,1]=-1
+pred[1,0]=0
+pred[1,1]=-1
+pred[2,0]=0
+pred[2,1]=1
+
+declare -i n
+n = 0
+
+
+cal_key () {
+	if [ ${g[n]} -ge ${rhs[n]} ]
+	then
+   		key[$n,0] = ${rhs[n]}+${h[n]}
+		key[$n,1] = ${rhs[n]}
 	else
-	{
-		key[n][0]= g[n]+h[n];
-		key[n][1]=g[n];
-		
-	}	
+   		key[$n,0] = ${g[n]}+${h[n]}
+		key[$n,1] = ${g[n]}
+	
 }
 
-void rem_visited(int n)
-{
-	int i=0, temp=0;
+rem_visited(){
+	declare -i i
+	i = 0
+	declare -i temp
+	temp = 0	
 	while((i<3)&&(visited[i]!=n))
 	{
 		i++;
@@ -44,16 +91,16 @@ void rem_visited(int n)
 	visited[i] = -1;
 }
 
-void add_visited(int n)
-{	
-	int i=0;
-	printf("/n adding %d to visited ",n);
-	while((visited[i]!=-1)&&i<3&&n<3)
-	{
-		i++;
-	}
-	visited[i]= n;
-	return;
+
+add_visited () {	
+	declare -i i
+	i = 0
+    	while [ ${visited[i]} -ne -1 -a $i -le 3 -a $n -le 3 ]
+	do
+		i = $i + 1
+	done
+	visited[i] = $n
+
 }
 
 void rem_open(int n)
