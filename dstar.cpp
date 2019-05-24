@@ -77,18 +77,23 @@ rem_visited(){
 	declare -i i
 	i = 0
 	declare -i temp
-	temp = 0	
-	while((i<3)&&(visited[i]!=n))
-	{
-		i++;
-			
-	}
+	temp = 0
+	while [ ${visited[i]} -ne $n -a $i -le 3 ]
+	do
+		i = $i + 1
+	done
+	while [ $i -le 3 ]
+	do
+		visited[$i]=${visited[$i+1]}
+
+	done
+		
 	while((i<2))
-	{
+	do
 		visited[i]=visited[i+1];
 		i++;
-	}
-	visited[i] = -1;
+	done
+	visited[i] = $n
 }
 
 
@@ -103,54 +108,60 @@ add_visited () {
 
 }
 
-void rem_open(int n)
-{
-	int i=0;
-	printf("/n Removing %d from open ",n);
-	while(i<3)
-	{
-		if(n==open[i])
-		{
-			open[i] = -1;                         // if s in open then remove 
-			add_visited(n);
-		}
+rem_open(){
+	declare -i i
+	i = 0
+	while [ $i -le 3 ]
+	do
+		if [ $n -eq ${open[i]} ]
+		then
+			open[i] = -1			  // if s in open then remove 
+			add_visited()
 		else
-			i++;
-	}	
-}
-
-void add_open(int n)
-{	
-	int i =0;
-	printf("/n Adding %d to open ",n);
-	rem_visited(n);                               /// extra added later
-	while((open[i]!=-1)&&i<3&&n<3)
-	{
-		i++;
-	}
-	
-	if(n<3)
-	open[i] = n;
-	for(i=0;i<3;i++)
-		printf(" open list %d\n",open[i]);
+			i = $i + 1
+	done
 	
 }
 
-void min_rhs(int n)
-{	
-	int i=0,k=0,c=0,min =1500;
-	for(i=0;i<2;i++)
-	{	
-		k = sucs[n][i];
-		c = adj[n][k];
-		c = c+g[k];
-		if(min>c)
-		{
-			min = c;
-		}
-	}
-	printf("\n %d is the rhs of %d\n",min,n);
-	rhs[n] = min;
+add_open(){
+	declare -i i
+	i = 0
+    	rem_visited()					/// extra added later
+	while [ ${open[i]} -ne -1 -a $i -le 3 -a $n -le 3 ]
+	do
+		i = $i + 1
+	done	
+	
+	
+	if [ $n -lt 3 ]
+	then
+		open[i] = $n
+	
+}
+
+
+min_rhs()
+{	declare -i i
+	i = 0
+	declare -i k
+	k = 0
+	declare -i c
+	c = 0
+	declare -i min
+	min = 1500
+	
+	for i in 0 1
+	do	
+		k = $sucs[$n,$i]
+		c = $adj[$n,$k]
+		c = $c+$g[$k]
+		if [ $min -gt $c ]
+		then
+			min = $c
+		
+	done
+	
+	rhs[$n] = $min
 	
 }
 
