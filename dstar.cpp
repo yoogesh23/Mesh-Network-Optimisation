@@ -242,34 +242,25 @@ i=1
 while [ ${open[i]} -ne -1 -a $i -lt 3 ]
 do
 	if [ ${key[${open[i]}][0]} -lt ${key[${open[min]}][0]} ]; then
-		{
-			min = i;
-			printf("In one \n");
+		min = i
+				
 			
 			
-		}
-		else if((key[open[i]][1]<key[open[min]][1])&&(key[open[i]][0]==key[open[min]][0]))
-		{
-			min =i;
-			printf("In two \n");
-			
-		}
-		else
-			i++;
+		
+	else if [ ${key[${open[i]}][1]} -lt ${key[${open[$min]}][1]} -a ${key[${open[$i]}][0]} -eq ${key[${open[$min]}][0]} ]; then
+		min =i
+	else
+		i = $i + 1
 	
+done
 }
-}
-	n = open[min];
-	//	n = min;                                          // changing the code
-		
-		printf("In min_key \n");
-		printf("\n min value %d",min);
-		
-	return min;
+	n = ${open[min]}
+	//	n = min                                          // changing the code
+
+	return min;                      %% should change
 }
 
-int check_loop()
-{
+check_loop(){
 	int i,j, min = 0;
 	for(j=0;j<3;j++)
 		cal_key(j);
