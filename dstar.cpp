@@ -294,117 +294,175 @@ check_loop(){
 		
 }
 
-void shortest_path()
+shortest_path()
 {	
-		printf("In shortest path");
-	int i = 0, z;
-	while(check_loop())
-	{	
+	echo "IN SHORTEST PATH"
+	declare -i i=0
+	declare -i z=0
+	declare -i kl=0
+	kl=check_loop
 	
-		printf("In flag 1 //////////////////////////\n");
-		printf("In value of n is %d \n",n);
-		rem_open(n);
-		if(g[n]>rhs[n])
-		{	
-			printf("In flag 2.................. \n");
-			i = 0;
-			g[n] = rhs[n];
-			printf("/n g[0] %d",g[n]);
-			printf("\n rhs[n] %d",rhs[n]);
-			while((i<2)&&(pred[n][i]!=-1))
-			{   
-				printf("In pred update \n");
-				printf("\n\nexpanding %d\n",pred[n][i]);
-				update_state(pred[n][i]); 
-				i++;              // update predecesor of s
-			}
-			printf("In pred update end\n");
-			for(int j=0;j<3;j++)
-				cal_key(j);
+	while[ $kl ]
+	do	
+		echo "In value of n is $n"
+		rem_open $n
+		if [ ${g[n]} -ge ${rhs[n]} ]
+		do	
+			i=0
+			g[n]=${rhs[n]}
+			#printf("/n g[0] %d",g[n]);
+			#printf("\n rhs[n] %d",rhs[n]);
+			while [ $i -le 1 -a ${pred[n]} -ne -1 } ]
+			do   
+				#printf("\n\nexpanding %d\n",pred[n][i]);
+				update_state ${pred[n,i]} 
+				i=$i+1    // update predecesor of s
+			done
+			#printf("In pred update end\n");
+			for(( j=0; j<3; j++ ))
+			do
+				cal_key $j
+			done
+			declare -i i			
 			for(i=0;i<3;i++)
-				for(int r=0;r<2;r++)
-					printf(" \t %d ",key[i][r]);
-			for(int q=0;q<3;q++)
-				printf(" g %d\n",g[q]);	
-		}
-	}
+			do
+			declare -i r
+				for(( r=0; r<2; r++ ))
+				do
+					echo -n ${key[i,r]}
+				done
+			declare -i q
+			for(( q=0; q<3; q++ ))
+			do
+				echo -n "g" ${g[q]}
+			done	
+		done
+	done
 }
 
-int main(void)
-{	int i=0,j,z,cost=0;
-	int s,d;
-	printf("In main \n");
-	
-	printf("In main 2 \n");
-	
-	g[2] = 1000;
-	rhs[2] = 0;
-	open[0] = 2;
-	for(i=0;i<3;i++)
-		printf(" open list %d\n",open[i]);
-	for(i=0;i<3;i++)
-		cal_key(i);
-	scanf("%d",&z);
-	shortest_path();
-	for(i=0;i<3;i++)
-		printf(" open list %d\n",open[i]);
-	for(i=0;i<3;i++)
-		printf(" rhs %d\n",rhs[i]);	
-	for(i=0;i<3;i++)
-		printf(" g %d\n",g[i]);	
-	for(i=0;i<3;i++)
-		cal_key(i);
-		
-	for(i=0;i<3;i++)
-		for(j=0;j<2;j++)
-			printf(" \t %d ",key[i][j]);
-	for(i=0;i<3;i++)
-		printf("\n visited %d\n",visited[i]);	
-	for(i=2;i>=0;i--)
-		printf(" %d ---> ",visited[i]);
+
+declare -i i=0
+declare -i z=0
+declare -i j=0
+declare -i cost=0
+echo ("In main \n");
 
 	
-	// D*
-	
-	printf("\n Enter the source node ---> destination node to update path");
-	
-	scanf("%d %d",&s,&d);
-	
-	printf("\n update the cost :");
-	scanf("%d",&cost);
-	adj[s][d] = cost;
-	printf("\n cost updated :");
-	update_state(s);
-	printf("\n update done from D* :");
-	h[2] = 20;
-	for(i=0;i<3;i++)
-		cal_key(i);
- 
-	for(i=0;i<3;i++)
-		for(j=0;j<2;j++)
-			printf(" \t %d ",key[i][j]);
-			
-			
-			
-	shortest_path();
-	
-	
-	for(i=0;i<3;i++)
-		printf(" open list %d\n",open[i]);
-	for(i=0;i<3;i++)
-		printf(" rhs %d\n",rhs[i]);	
-	for(i=0;i<3;i++)
-		printf(" g %d\n",g[i]);	
-	for(i=0;i<3;i++)
-		cal_key(i);
+g[2]=1000
+rhs[2]=0
+open[0]=2
+
+for(( i=0; i<3; i++ ))
+do
+	echo "open list" ${open[i]}
+done
+
+for(( i=0; i<3; i++ ))
+do
+	cal_key $i
+done
+
+read $z
+shortest_path
+
+for(( i=0; i<3; i++ ))
+do
+	echo "open list" ${open[i]}
+done
+
+for(( i=0; i<3; i++ ))
+do
+	echo "rhs" ${rhs[i]}	
+done
+
+for(( i=0; i<3; i++ ))
+do
+	echo "g" ${g[i]}	
+done
+
+for(( i=0; i<3; i++ ))
+do
+	cal_key $i
+done
 		
-	for(i=0;i<3;i++)
-		for(int j=0;j<2;j++)
-			printf(" \t %d ",key[i][j]);
-	for(i=0;i<3;i++)
-		printf("\n visited %d\n",visited[i]);	
-	for(i=2;i>=0;i--)
-		printf(" %d ---> ",visited[i]);
-	return 0;
+for(( i=0; i<3; i++ ))
+do
+	for(( j=0; j<2; j++ ))
+		do
+			echo -n ${key[i,j]}
+		done
+done
+for(( i=0; i<3; i++ ))
+do
+	echo "visited" ${visited[i]}
+done
+for(( i=2; i>=0; i-- ))
+do 
+	echo ${visied[i]} "------>"
+done
+
+#D*
+
+echo "Enter source node"
+read s
+echo "Enter desti node"
+read d
+echo "cost"
+read cost
+echo "cost updates"
+update_state $s
+
+echo "update done for D*"
+
+h[2]=20;
+
+for(( i=0; i<3; i++ ))
+do
+	cal_key $i
+done
+
+for(( i=0; i<3; i++ ))
+do 
+	for(( j=0; j<2; j++ ))
+	do
+		echo -n ${key[i,j]}
+	done
+done
+
+shortest_path
+
+for(( i=0; i<3; i++ ))
+do
+	echo "open list" ${open[i]}
+done
+
+for(( i=0; i<3; i++ ))
+do
+	echo "rhs" ${rhs[i]}	
+done
+
+for(( i=0; i<3; i++ ))
+do
+	echo "g" ${g[i]}	
+done
+
+for(( i=0; i<3; i++ ))
+do
+	cal_key $i
+done
 		
-}}
+for(( i=0; i<3; i++ ))
+do
+	for(( j=0; j<2; j++ ))
+		do
+			echo -n ${key[i,j]}
+		done
+done
+for(( i=0; i<3; i++ ))
+do
+	echo "visited" ${visited[i]}
+done
+for(( i=2; i>=0; i-- ))
+do 
+	echo ${visied[i]} "------>"
+done
