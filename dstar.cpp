@@ -1,20 +1,20 @@
 #!/bin/bash
 
 declare -A g
-g=("1000" "1000" "1000")
+g=(1000 1000 1000)
 
 declare -A rhs
-rhs=("1000" "1000" "0")
+rhs=(1000 1000 0)
 
 declare -A open
-open=("-1" "-1" "-1")
+open=(-1 -1 -1)
 
 declare -A key
 num_rows=3
 num_columns=2
 
 declare -A h 
-h=("0" "10" "25")
+h=(0 10 25)
 
 declare -A adj
 num_rows=3
@@ -30,7 +30,7 @@ adj[2,1]=20
 adj[2,2]=0
 
 declare -A visited
-visited=("-1" "-1" "-1")
+visited=(-1 -1 -1)
 
 declare -i start 
 start= 0
