@@ -21,7 +21,29 @@ num_rows=3
 num_columns=3
 adj[0,0]=0
 adj[0,1]=10
-adj[0,2]=25
+adj[0,2]=25check_loop(){
+	int i,j, min = 0;
+	for(j=0;j<3;j++)
+		cal_key(j);
+	
+	min = min_key();
+	if(min==-1)
+	{
+		return 0;
+	}
+	
+	printf("problem located \n");
+	if(key[n][0]<key[start][0])
+	{
+			return 1;
+			printf("Target 1 \n");
+	}
+	else if(key[n][1]<key[start][1])
+	{
+			return 1;
+			printf("Target 2 \n");
+	}
+	else if(rhs[start]!=
 adj[1,0]=10
 adj[1,1]=0
 adj[1,2]=20
@@ -260,39 +282,47 @@ done
 	return min;                      %% should change
 }
 
-check_loop(){
-	int i,j, min = 0;
-	for(j=0;j<3;j++)
-		cal_key(j);
+check_loop()
+{
+	declare -i i
+	declare -i j
+	declare -i min=0
+
+	for(( j=0; j<3; j++ ))
+	do
+		cal_key $j
+	done
 	
-	min = min_key();
-	if(min==-1)
-	{
-		return 0;
-	}
+	min_key
+	min=$?
 	
-	printf("problem located \n");
-	if(key[n][0]<key[start][0])
-	{
-			return 1;
-			printf("Target 1 \n");
-	}
-	else if(key[n][1]<key[start][1])
-	{
-			return 1;
-			printf("Target 2 \n");
-	}
-	else if(rhs[start]!=g[start])
-	{
-			return 1;
-			printf("Target 3 \n");
-	}
-	printf("Target 0\n");	
-	return 0;
-		
-		
-		
+	if [ $min -eq -1 ]
+	do
+		return 0
+	done
+	
+	echo "problem located"
+
+	if[ ${key[$n,0]} -lt ${key[$start,0]} ]
+	then
+		return 1
+	
+	elif [ ${key[$n,1] -lt ${key[$start,1]} ]
+	then
+		return 1
+	
+	elif [ ${rhs[$start]} -ne ${g[$start]} ]
+	then
+		return 1
+	
+	esle
+		return 0
+	fi
+	#printf("Target 0\n");	
+	#return 0
+				
 }
+
 
 void shortest_path()
 {	
