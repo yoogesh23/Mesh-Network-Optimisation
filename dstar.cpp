@@ -251,7 +251,7 @@ do
 		min =i
 	else
 		i = $i + 1
-	
+	fi
 done
 }
 	n = ${open[min]}
@@ -261,32 +261,34 @@ done
 }
 
 check_loop(){
-	int i,j, min = 0;
-	for(j=0;j<3;j++)
-		cal_key(j);
 	
-	min = min_key();
-	if(min==-1)
-	{
-		return 0;
-	}
+	declare -i i
+	i = 0
+	declare -i min
+	min = 0
+	declare -i j
+	j = 0
+	int i,j, min = 0;
+	for((j=0;j<3;j++))
+		cal_key(j);			%% should chnage
+	
+	min = min_key();			%% should chnage
+	if [min -eq -1]; then
+		return 0;			%% should chnage
+	
 	
 	printf("problem located \n");
-	if(key[n][0]<key[start][0])
-	{
-			return 1;
+	if [ ${key[$n][0]} -lt ${key[$start][0]} ]; then
+			return 1;		%% should chnage
 			printf("Target 1 \n");
-	}
-	else if(key[n][1]<key[start][1])
-	{
-			return 1;
+	
+	else if [${key[$n][1]} -lt ${key[$start][1]} ]; then
+			return 1;		%% should chnage
 			printf("Target 2 \n");
-	}
-	else if(rhs[start]!=g[start])
-	{
-			return 1;
+	
+	else if [${rhs[$start]} -ne ${g[$start]} ]; then
+			return 1;		%% should chnage
 			printf("Target 3 \n");
-	}
 	printf("Target 0\n");	
 	return 0;
 		
