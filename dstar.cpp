@@ -1,6 +1,6 @@
 #!/bin/bash
 
-
+declare -a g
 g=(1000 1000 1000)
 
 
