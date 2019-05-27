@@ -9,7 +9,7 @@ rhs=(1000 1000 0)
 
 open=(-1 -1 -1)
 
-declare -a key
+declare -A key
 num_rows=3
 num_columns=2
 
@@ -78,7 +78,7 @@ rem_visited(){
 	
 	while [ ${visited[i]} -ne $n -a $i -lt 3 ]
 	do
-		i = $i + 1
+		i=$(($i+1))
 	done
 	#while [ $i -lt 3 ]
 	#do
@@ -88,9 +88,9 @@ rem_visited(){
 	while [ $i -lt 2 ]
 	do
 		visited[$i]=${visited[$i+1]}
-		i=$i+1
+		i=$(($i+1))
 	done
-	visited[$i] = -1
+	visited[$i]=-1
 }
 
 
@@ -100,9 +100,9 @@ add_visited () {
 	local n="$1"
     	while [ "${visited[i]}" -ne -1 -a $i -le 3 -a $n -le 3 ]
 	do
-		i = $i + 1
+		i=$(($i+1))
 	done
-	visited[$i] = $n
+	visited[$i]=$n
 
 }
 
@@ -112,10 +112,10 @@ rem_open(){
 	do
 		if [ $n -eq "${open[i]}" ]
 		then
-			open[$i] = -1			  # if s in open then remove 
+			open[$i]=-1			  # if s in open then remove 
 			add_visited
 		else
-			i=$i+1
+			i=$(($i+1))
 		fi
 	done
 	
@@ -129,12 +129,12 @@ add_open(){
 	
 	while [ ${open[i]} -ne -1 -a $i -le 3 -a $n -le 3 ]
 	do
-		i = $i + 1
+		i=$(($i+1))
 	done	
 	
 	
 	if [ $n -lt 3 ]; then
-		open[$i] = $n
+		open[$i]=$n
 	fi
 	for (( i=0; i<3; i++ ))
 	do
@@ -144,27 +144,24 @@ add_open(){
 
 
 min_rhs()
-{	declare -i i
-	i = 0
-	declare -i k
-	k = 0
-	declare -i c
-	c = 0
-	declare -i min
-	min = 1500
+{	declare -i i=0
+	declare -i k=0
+	declare -i c=0
+	declare -i min=1500
 	local n="$1"
+	
 	for i in 0 1
 	do	
-		k = ${sucs[$n,$i]}
-		c = ${adj[$n,$k]}
-		c = $c+${g[$k]}
+		k=${sucs[$n,$i]}
+		c=${adj[$n,$k]}
+		c=$(($c+${g[$k]}))
 		if [ $min -gt $c ]; then
-			min = $c
+			min=$c
 		fi
 		
 	done
 	
-	rhs[$n] = $min
+	rhs[$n]=$min
 	
 }
 
@@ -180,34 +177,34 @@ update_state(){
 	do
 		cal_key "$j"
 	done
-	j = 0
+	j=0
 
 	while [ $i  -lt 3 ]
 	do
 		if [ $n -eq ${visited[$i]} ]
 		then
-			flag = 1
+			flag=1
 			break
 		else
-			i = $i + 1
+			i=$(($i+1))
 		fi
 	done
 	if [ $flag -eq 0 ]; then
-		g[$n] = 1000
+		g[$n]=1000
 	fi	
 	if [ $n -ne $goal ]; then
 		min_rhs "$n"
 	fi			   #  min sE succ
-	i = 0
+	i=0
 	
 	
 	while [ $i -lt 3 ]
 	do
 		if [ ${open[i]} -ne -1 -a  ${open[i]} -eq $n ]; then
-			flag2 = 1
+			flag2=1
 		fi
 
-		i = $i + 1
+		i=$(($i+1))
 	done
 	if [ $flag2 -eq 1 ]; then
 		rem_open "$n"
@@ -240,12 +237,12 @@ min_key(){
 	while [ ${open[i]} -ne -1 -a $i -lt 3 ]
 	do
 		if [ ${key[${open[$i]}][0]} -lt ${key[${open[$min]},0]} ]; then
-			min = $i	
+			min=$i	
 		
 		elif [ ${key[${open[$i]},1]} -lt ${key[${open[$min]} ][1]} -a ${key[${open[$i]}][0]} -eq ${key[${open[$min]}][0]} ]; then
-			min =$i
+			min=$i
 		else
-			i = $i + 1
+			i=$(($i+1))
 		fi	
 	done
 
@@ -276,9 +273,9 @@ check_loop()
 	fi
 	
 	echo "problem located"
-	v="${key[2,0]}"
-	echo $v
-	if [ "${key[$n,0]}" -le "${key[$start,0]}" ]
+	v=${key[2,0]}
+	echo $v 
+	if [ ${key[$n,0]} -le ${key[$start,0]} ]
 	then
 		return 1
 	
@@ -320,7 +317,7 @@ shortest_path()
 			do   
 				#printf("\n\nexpanding %d\n",pred[n][i]);
 				update_state "${pred[n,i]}" 
-				i=$i+1    // update predecesor of s
+				i=$(($i+1))    // update predecesor of s
 			done
 			#printf("In pred update end\n");
 			for(( j=0; j<3; j++ ))
@@ -419,7 +416,7 @@ update_state "$s"
 
 echo "update done for D*"
 
-h[2]=20;
+h[2]=20
 
 for(( i=0; i<3; i++ ))
 do
