@@ -59,24 +59,39 @@ declare -i n=0
 
 
 cal_key () {
-	if [ ${g[n]} -ge ${rhs[n]} ]
+	local n="$1"
+	#echo "nksclackcnalsnclsanclsal  $n"
+	if [ ${g[${n}]} -ge ${rhs[${n}]} ]
 	then
-   		key[$n,0]=$(( ${rhs[n]} + ${h[n]} ))
-		key[$n,1]=${rhs[n]}
+   		key[${n},0]=$(( ${rhs[${n}]} + ${h[${n}]} ))
+		key[${n},1]=${rhs[${n}]}
+		#echo "haha 1"
 	else
-   		key[$n,0]=$(( ${g[n]} + ${h[n]} ))
-		key[$n,1]=${g[n]}
+   		key[${n},0]=$(( ${g[${n}]} + ${h[${n}]} ))
+		key[${n},1]=${g[${n}]}
+		#echo "haha 2"
 	fi
-	
+	echo "${key[${n},0]}"
+	echo "${key[${n},1]}"
+	#for ((i=0; i<3; i++))
+	#do
+	#	echo "haha 3"
+    	#	for ((j=0; j<2; j++))
+    	#	do
+	#		echo "haha 4"        		
+	#		echo "${key[${i},${j}]}"
+    	#	done
+	#done
+
+
 }
 
 rem_visited(){
 	local n="$1"
-	declare -i i=1
-	declare -i temp
-	temp = 0
+	local -i i=0
+	local -i temp=0
 	
-	while [ ${visited[i]} -ne $n -a $i -lt 3 ]
+	while [ "${visited[${i}]}" != "$n" ] && [ "$i" -lt 3 ]
 	do
 		i=$(($i+1))
 	done
@@ -87,33 +102,35 @@ rem_visited(){
 	#done
 	while [ $i -lt 2 ]
 	do
-		visited[$i]=${visited[$i+1]}
+		visited[${i}]=${visited[${i}+1]}
 		i=$(($i+1))
 	done
-	visited[$i]=-1
+	visited[${i}]=-1
 }
 
 
 add_visited () {
 	
-	local i=1
+	local i=0
 	local n="$1"
-    	while [ "${visited[i]}" -ne -1 -a $i -le 3 -a $n -le 3 ]
+    	while [[ "${visited[${i}]}" -ne -1 && $i -lt 3 && $n -lt 3 ]]
 	do
 		i=$(($i+1))
 	done
-	visited[$i]=$n
+	visited[${i}]=$n
+	return 
 
 }
 
 rem_open(){
-	local i=1
-	while [ $i -le 3 ]
+	local i=0
+	local n="$1"
+	while [ $i -lt 3 ]
 	do
-		if [ $n -eq "${open[i]}" ]
+		if [ "$n" = "${open[${i}]}" ]
 		then
-			open[$i]=-1			  # if s in open then remove 
-			add_visited
+			open[${i}]=-1			  # if s in open then remove 
+			add_visited "$n"
 		else
 			i=$(($i+1))
 		fi
@@ -127,14 +144,14 @@ add_open(){
 	
     	rem_visited "$n" 					# extra added later
 	
-	while [ ${open[i]} -ne -1 -a $i -le 3 -a $n -le 3 ]
+	while [ ${open[${i}]} -ne -1 -a $i -lt 3 -a $n -lt 3 ]
 	do
 		i=$(($i+1))
 	done	
 	
 	
 	if [ $n -lt 3 ]; then
-		open[$i]=$n
+		open[${i}]=$n
 	fi
 	for (( i=0; i<3; i++ ))
 	do
@@ -144,17 +161,17 @@ add_open(){
 
 
 min_rhs()
-{	declare -i i=0
-	declare -i k=0
-	declare -i c=0
-	declare -i min=1500
+{	local i=0
+	local k=0
+	local c=0
+	local min=1500
 	local n="$1"
 	
-	for i in 0 1
+	for(( i=0; i<2; i++ ))
 	do	
-		k=${sucs[$n,$i]}
-		c=${adj[$n,$k]}
-		c=$(($c+${g[$k]}))
+		k=${sucs[${n},${i}]}
+		c=${adj[${n},${k}]}
+		c=$(($c+${g[${k}]}))
 		if [ $min -gt $c ]; then
 			min=$c
 		fi
@@ -168,11 +185,12 @@ min_rhs()
 
 update_state(){	
 	
-	declare -i i=0
-	declare -i flag=0
-	declare -i flag2=0
-	declare -i j=0
-	
+	local i=0
+	local flag=0
+	local flag2=0
+	local j=0
+	local n="$1"
+
 	for j in 0 1 2
 	do
 		cal_key "$j"
@@ -181,7 +199,7 @@ update_state(){
 
 	while [ $i  -lt 3 ]
 	do
-		if [ $n -eq ${visited[$i]} ]
+		if [ "$n" = "${visited[${i}]}" ]
 		then
 			flag=1
 			break
@@ -200,7 +218,7 @@ update_state(){
 	
 	while [ $i -lt 3 ]
 	do
-		if [ ${open[i]} -ne -1 -a  ${open[i]} -eq $n ]; then
+		if [ ${open[${i}]} -ne -1 -a  ${open[${i}]} -eq $n ]; then
 			flag2=1
 		fi
 
@@ -217,10 +235,10 @@ update_state(){
 }
 
 min_key(){
-	declare -i i=0
-	declare -i flag=0
-	declare -i min=2
-	declare -i j=0
+	local -i i=0
+	local -i flag=0
+	local -i min=2
+	local -i j=0
 	
 	for(( j=0; j<3; j++ ))
 	do
@@ -234,30 +252,30 @@ min_key(){
 		min=0	
 		i=1
 	fi
-	while [ ${open[i]} -ne -1 -a $i -lt 3 ]
+	while [ ${open[${i}]} -ne -1 -a $i -lt 3 ]
 	do
-		if [ ${key[${open[$i]}][0]} -lt ${key[${open[$min]},0]} ]; then
+		if [ ${key[${open[$i]},0]} -lt ${key[${open[$min]},0]} ]; then
 			min=$i	
 		
-		elif [ ${key[${open[$i]},1]} -lt ${key[${open[$min]} ][1]} -a ${key[${open[$i]}][0]} -eq ${key[${open[$min]}][0]} ]; then
+		elif [ ${key[${open[$i]},1]} -lt ${key[${open[$min]},1]} -a ${key[${open[$i]},0]} -eq ${key[${open[$min]},0]} ]; then
 			min=$i
 		else
 			i=$(($i+1))
 		fi	
 	done
 
-	n=${open[min]}
+	n=${open[$min]}
 	#	n = min                                          // changing the code
-
+	echo " sljsjkdjfkdfjdjkdkjdkjdfkd $min"
 	return $min                      #%% should change
 }
 
 
 check_loop()
 {
-	declare -i i
-	declare -i j
-	declare -i min=0
+	local -i i
+	local -i j
+	local -i min=0
 
 	for(( j=0; j<3; j++ ))
 	do
@@ -273,17 +291,17 @@ check_loop()
 	fi
 	
 	echo "problem located"
-	v=${key[2,0]}
-	echo $v 
-	if [ ${key[$n,0]} -le ${key[$start,0]} ]
+	
+	#echo "${key[3,3]}" 
+	if [ ${key[${n},0]} -le ${key[${start},0]} ]
 	then
 		return 1
 	
-	elif [ ${key[$n,1]} -le ${key[$start,1]} ]
+	elif [ ${key[${n},1]} -le ${key[${start},1]} ]
 	then
 		return 1
 	
-	elif [ ${rhs[$start]} -ne ${g[$start]} ]
+	elif [ ${rhs[${start}]} -ne ${g[${start}]} ]
 	then
 		return 1
 	
@@ -298,26 +316,28 @@ check_loop()
 shortest_path()
 {	
 	echo "IN SHORTEST PATH"
-	declare -i i=0
-	declare -i z=0
-	declare -i kl=0
+	local -i i=0
+	local -i z=0
+	local -i kl=0
 	check_loop
 	kl=$?
 	while [ $kl -eq 1 ]
 	do	
 		echo "In value of n is $n"
 		rem_open "$n"
-		if [ ${g[n]} -ge ${rhs[n]} ]
+		if [ ${g[$n]} -gt ${rhs[$n]} ]
 		then	
 			i=0
-			g[n]=${rhs[n]}
+			g[$n]=${rhs[$n]}
 			#printf("/n g[0] %d",g[n]);
 			#printf("\n rhs[n] %d",rhs[n]);
-			while [ $i -le 1 -a ${pred[n]} -ne -1 ]
+			f=-1
+			ff=2
+			while [[ "$i" < "$ff" && "${pred[$n,$i]}" != "$f" ]]
 			do   
 				#printf("\n\nexpanding %d\n",pred[n][i]);
-				update_state "${pred[n,i]}" 
-				i=$(($i+1))    // update predecesor of s
+				update_state "${pred[${n},${i}]}" 
+				i=$(($i+1))    #// update predecesor of s
 			done
 			#printf("In pred update end\n");
 			for(( j=0; j<3; j++ ))
@@ -330,15 +350,16 @@ shortest_path()
 			declare -i r
 				for(( r=0; r<2; r++ ))
 				do
-					echo -n ${key[i,r]}
+					echo -n ${key[${i},${r}]}
 				done
 			done
 			declare -i q
 			for(( q=0; q<3; q++ ))
 			do
-				echo -n "g" ${g[q]}
+				echo -n "g" ${g[$q]}
 			done	
 		fi
+		echo "In value is done"
 	done
 }
 
@@ -356,30 +377,32 @@ open[0]=2
 
 for(( i=0; i<3; i++ ))
 do
-	echo "open list" ${open[i]}
+	echo "open list" ${open[$i]}
 done
 
 for(( i=0; i<3; i++ ))
 do
 	cal_key "$i"
+	echo "cal key $i"
 done
+
 
 read z
 shortest_path
 
 for(( i=0; i<3; i++ ))
 do
-	echo "open list" ${open[i]}
+	echo "open list" ${open[$i]}
 done
 
 for(( i=0; i<3; i++ ))
 do
-	echo "rhs" ${rhs[i]}	
+	echo "rhs" ${rhs[$i]}	
 done
 
 for(( i=0; i<3; i++ ))
 do
-	echo "g" ${g[i]}	
+	echo "g" ${g[$i]}	
 done
 
 for(( i=0; i<3; i++ ))
@@ -391,16 +414,16 @@ for(( i=0; i<3; i++ ))
 do
 	for(( j=0; j<2; j++ ))
 		do
-			echo -n ${key[i,j]}
+			echo ${key[${i},${j}]}
 		done
 done
 for(( i=0; i<3; i++ ))
 do
-	echo "visited" ${visited[i]}
+	echo "visited" ${visited[$i]}
 done
 for(( i=2; i>=0; i-- ))
 do 
-	echo ${visied[i]} "------>"
+	echo ${visied[$i]} "------>"
 done
 
 #D*
@@ -427,7 +450,7 @@ for(( i=0; i<3; i++ ))
 do 
 	for(( j=0; j<2; j++ ))
 	do
-		echo -n ${key[i,j]}
+		echo -n ${key[${i},${j}]}
 	done
 done
 
@@ -435,17 +458,17 @@ shortest_path
 
 for(( i=0; i<3; i++ ))
 do
-	echo "open list" ${open[i]}
+	echo "open list" ${open[$i]}
 done
 
 for(( i=0; i<3; i++ ))
 do
-	echo "rhs" ${rhs[i]}	
+	echo "rhs" ${rhs[$i]}	
 done
 
 for(( i=0; i<3; i++ ))
 do
-	echo "g" ${g[i]}	
+	echo "g" ${g[$i]}	
 done
 
 for(( i=0; i<3; i++ ))
@@ -457,14 +480,14 @@ for(( i=0; i<3; i++ ))
 do
 	for(( j=0; j<2; j++ ))
 		do
-			echo -n ${key[i,j]}
+			echo ${key[${i},${j}]}
 		done
 done
 for(( i=0; i<3; i++ ))
 do
-	echo "visited" ${visited[i]}
+	echo "visited" ${visited[$i]}
 done
 for(( i=2; i>=0; i-- ))
 do 
-	echo ${visied[i]} "------>"
+	echo ${visied[$i]} "------>"
 done
