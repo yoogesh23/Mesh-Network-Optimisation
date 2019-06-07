@@ -54,54 +54,55 @@ next=(-1 -1 -1)						#stores the next hop node of each node; path is extracted f
 
 cal_key () {	
 	
-	int i=0;
-	while(i<3)
-	{
+	local i="$0"
 	
-		if(g[i]>=rhs[i])
-		{
-			key[i][0]= rhs[i]+h[i];                // calculating key value for each node
-			key[i][1]=rhs[i];
-		}
+	while [$i -lt 2 ]
+	do
+	
+		if [ ${g[${i}]} -ge {rhs[${i}]} ]
+		then
+			key[${i},0]=$(( ${rhs[${i}]} + ${h[${i}]} ))                #calculating key value for each node
+			key[${i},1]=${rhs[${i}]}
+
 		else
-		{
-			key[i][0]= g[i]+h[i];
-			key[i][1]=g[i];
+		
+			key[${i},0]= $(( ${g[${i}]} + ${h[${i}]} ))
+			key[${i},1]=${g[${i}]}
 			
-		}
-		i++;
-	}
-
-	return;
+		fi
+		i=$(($i+1))
+	done
+	#visited[${i}]=-1
+	return
 }
 
 
 
-void add_visited(int n)                            // adding a node to visited list.
-{												   // once added to the visited list it need not be removed even added to 
-	int i=0;									   // open list once again.
-	if(visited[0]==-1)
-	{
-		visited[0]=n;
-	}
+add_visited (){                            #adding a node to visited list.												   // once added to the visited list it need not be removed even added to 
+	
+	local i=0			   # open list once again.
+	
+	if [ ${visited[0]} -eq -1 ]
+	then
+		visited[0] = $$n
+	
 	else
-	{
 	
-		while((visited[i]!=-1)&&(i<2))
-		{	
+	
+		while [ "${visited[${i}]" != -1 ] && [ "$i" -it 2 ]
+		do	
 			                                       
-			i++;
-		}
+			i=$(($i+1))
+		done
 	
-		visited[i]= n;
-	}
+		visited[${i}]= "$n"
+	fi
 
-	return;
+	return
 }
 
-void rem_open(int n)
-{
-	int i=0;
+rem_open () {
+	local -i i=0
 	while(i<3)
 	{
 		if(n==open[i])
