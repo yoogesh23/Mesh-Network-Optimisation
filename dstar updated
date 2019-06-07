@@ -1,22 +1,58 @@
-#include <stdio.h>
+#!/bin/bash
 
-int g[3]={1000,1000,1000};							// g(s) for all nodes are set to infinte 
-int rhs[3]={1000,1000,0};							// rhs(s) of all except goal is set infinte and rhs(goal) = 0
-int open[3]= {-1,-1,-1};							// open list is empty 
-int key[3][2]; 
-int h[3]={0,1,1};                                 // heuristics calculated based on the no of hops from start node
+g=(1000 1000 1000)						# g(s) for all nodes are set to infinte 
 
-int adj[3][3] = {0,10,25, 1000,0,20, 1000,1000,0};   // adjcency matrix has to path cost and need to be updated if cost changes 
-int visited[3]= {-1,-1,-1};
-int start = 0;                                     // start node; in our case its node '0'
-int goal = 2;									// goal node; in our case its node '2'
-int sucs[3][2] = {1,2, 2,-1, -1,-1};				// successors of each node
-int pred[3][2] = {-1,-1, 0,-1, 0,1};			// predecessors of each node 
-int n = 0;
-int next[3] = {-1,-1,-1};						// stores the next hop node of each node; path is extracted from this
+rhs=(1000 1000 0)						# rhs(s) of all except goal is set infinte and rhs(goal) = 0
+open=(-1 -1 -1)							# open list is empty 
+declare -A key
+num_rows=3
+num_columns=2
+h=(0 1 1)                               			# heuristics calculated based on the no of hops from start node
 
-void cal_key()
-{	
+declare -A adj							#adjcency matrix has to path cost and need to be updated if cost changes 
+num_rows=3
+num_columns=3
+
+adj[0,0]=0
+adj[0,1]=10
+adj[0,2]=25
+adj[1,0]=1000
+adj[1,1]=0
+adj[1,2]=20
+adj[2,0]=1000
+adj[2,1]=1000
+adj[2,2]=0
+
+visited=(-1 -1 -1)
+
+declare -i start=0                                		#start node; in our case its node '0'
+declare -i goal=2 						# goal node; in our case its node '2'
+			
+declare -A sucs							# successors of each node
+num_rows=3
+num_columns=2
+sucs[0,0]=1
+sucs[0,1]=2
+sucs[1,0]=2
+sucs[1,1]=-1
+sucs[2,0]=-1
+sucs[2,1]=-1
+
+declare -A pred							# predecessors of each node 
+num_rows=3
+num_columns=2
+pred[0,0]=-1
+pred[0,1]=-1
+pred[1,0]=0
+pred[1,1]=-1
+pred[2,0]=0
+pred[2,1]=1	
+
+declare -i n=0
+
+next=(-1 -1 -1)						#stores the next hop node of each node; path is extracted from this
+
+cal_key () {	
 	
 	int i=0;
 	while(i<3)
