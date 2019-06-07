@@ -103,34 +103,34 @@ add_visited (){                            #adding a node to visited list.						
 
 rem_open () {
 	local -i i=0
-	while(i<3)
-	{
-		if(n==open[i])
-		{
-			open[i] = -1;                         // if s in open then remove 
-			add_visited(n);
-		}
+	while [ $i -lt 3 ]
+	do
+		if [ "$n" = "${open[${i}]}" ]
+		then
+			open[${i}] = -1                         # if s in open then remove 
+			add_visited "$n"
 		else
-			i++;
-	}
+			i=$(($i+1))
+		fi
+	done
 
 }
 
-void add_open(int n)
-{	
-	int i =0;
-	while((open[i]!=-1)&&i<3&&n<3)               // adding s to open list
-	{
-		i++;
-	}
+add_open () {	
+	local -i i =0
+	while ["${open[${i}]}" != -1] && [ "$i" -lt 3 ] && [ "$n" -lt 3 ]               // adding s to open list
+	do
+		i=$(($i+1))
+	done
 	
-	if(n<3)
-	open[i] = n;
-	
+	if ["$n" -lt 3 ]
+	then
+		open[${i}] = "$n"
+	fi
 }
 
-void min_rhs(int n)
-{	
+min_rhs (){
+
 	int i=0,k=0,c=0,min =1500;
 	for(i=0;i<2;i++)
 	{	
