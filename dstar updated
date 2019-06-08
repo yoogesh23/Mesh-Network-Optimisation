@@ -338,57 +338,56 @@ print_path ()
 {	
 	local -i i=0
 	printf("\nPath is %d ",start);
-	for(i=0;i<2;i++)
-	{
+	for (( i=0; i<2; i++ ))
+	do
 	
-		if(next[i]!=goal)
-		{
+		if [ "${next[${i}]}" != "$goal" ]
+		then
 			printf("---> %d",next[i]);   
-		}                                 									  // printing path
-		else if(next[i]==goal)
-		{
+		                                									  // printing path
+		else if [ "${next[${i}]}" = "$goal" ]
+		
 			printf("---> %d\n",next[i]);
-			break;
-		}
-	}
-	return;	
+			break
+		fi
+	done
+	return	
 }
-
-void change_cost()
-{	
-	int s,d,cost;
+change_cost(){	
+	local -i s
+	local -i d 
+	local -i cost
 	printf("\nEnter the source node ---> destination node to update path \n");
-	scanf("%d %d",&s,&d);
+	%%scanf("%d %d",&s,&d);
 	printf("\n update the cost :");
-	scanf("%d",&cost);
-	adj[s][d] = cost;                   								//  changing the cost of path
-	update_state(s);
-	cal_key();
- 	shortest_path();
-	cal_key();
-	print_path();
+	%%scanf("%d",&cost);
+	adj[${s},${d}]="$cost"                   								//  changing the cost of path
+	update_state "$s"
+	cal_key
+ 	shortest_path
+	cal_key
+	print_path
 }
 
-int main(void)
-{	
-	int i=0;
+main (){	
+	local -i i=0
 	
 	
-	g[2] = 1000;											// 1000 ~ infinite
-	rhs[2] = 0;													// Initilization
-	open[0] = 2;
+	g[2]=1000											// 1000 ~ infinite
+	rhs[2]=0													// Initilization
+	open[0]=2
 	
-	cal_key();
-	shortest_path();
-	cal_key();
-	print_path();                         				//  first run
+	cal_key 
+	shortest_path 
+	cal_key
+	print_path                        				#first run
 
-	while(i<3)
-	{
-		change_cost();                            // changing the cost for 3 times as i<3
-		i++;
-	}
+	while [ "$i" -lt 3 ]
+	do
+		change_cost                             #changing the cost for 3 times as i<3
+		i=(($i+1))
+	done
 
-	return 0;
+	return "0"
 		
 }
