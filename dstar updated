@@ -299,7 +299,7 @@ shortest_path (){
 	while [ $f -eq 1 ]
 	do	
 		rem_open "$n"
-		if [ ${g[${n}]} -lt ${rhs[${n}]} ]
+		if [ ${g[${n}]} -gt ${rhs[${n}]} ]
 		then	
 			
 			local -i i=0
